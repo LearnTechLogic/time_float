@@ -1,156 +1,221 @@
-# Timefloat 时光漂流局 - 项目实现计划
+# 时光漂流瓶项目 - 实施计划
 
 ## 项目概述
-开发一个基于 Flutter 和 Spring Boot 的时光漂流局网站，使用 MySQL 和 Redis 作为数据库。
+使用 Flutter（前端）+ Spring Boot（后端）+ MySQL（数据库）开发一个时光漂流瓶应用，用户可以：
+- 发送时光漂流瓶（包含文字、图片）
+- 随机捞取漂流瓶
+- 查看自己发送的漂流瓶
+- 回复捞取到的漂流瓶
 
-## 整体架构
-- **前端**：Flutter Web
-- **后端**：Spring Boot
-- **数据库**：MySQL (主数据库) + Redis (缓存)
-- **部署**：待确定
+---
 
-## 实施任务列表
+## [x] 任务 1：数据库设计与初始化
+- **Priority**: P0
+- **Depends On**: None
+- **Description**: 
+  - 设计数据库表结构（用户表、漂流瓶表、回复表）
+  - 创建数据库初始化脚本
+  - 配置 MyBatis 实体类和 Mapper
+- **Success Criteria**:
+  - 数据库表结构完整，包含所有必要字段和索引
+  - MyBatis 实体类和 Mapper 正确配置
+- **Test Requirements**:
+  - `programmatic` TR-1.1: 数据库脚本可以成功执行并创建所有表
+  - `programmatic` TR-1.2: MyBatis 配置正确，可以进行基本的 CRUD 操作
+- **Notes**: 
+  - 用户表：id, username, password, created_at
+  - 漂流瓶表：id, user_id, content, image_url, created_at, is_picked, picked_user_id
+  - 回复表：id, bottle_id, from_user_id, to_user_id, content, created_at
+- **Status**: 已完成
 
-### [x] 任务 1: 项目初始化与基础架构搭建
-- **优先级**：P0
-- **依赖**：None
-- **描述**：
-  - 创建项目目录结构
-  - 初始化 Spring Boot 后端项目
-  - 初始化 Flutter 前端项目
-  - 配置版本控制
-- **成功标准**：
-  - 项目结构清晰，前后端分离
-  - 基础项目可正常构建
-- **测试要求**：
-  - `programmatic` TR-1.1: Spring Boot 项目可正常启动
-  - `programmatic` TR-1.2: Flutter 项目可正常构建
-- **备注**：使用 Maven 构建 Spring Boot 项目，使用 Flutter 3.0+ 版本
+## [x] 任务 2：后端 Spring Boot 基础架构完善
+- **Priority**: P0
+- **Depends On**: 任务 1
+- **Description**:
+  - 添加 Spring Web 依赖
+  - 配置跨域处理
+  - 统一响应结果封装
+  - 全局异常处理
+  - 添加 JWT 认证支持
+- **Success Criteria**:
+  - 后端可以正常启动
+  - 跨域请求可以正常处理
+  - API 响应格式统一
+- **Test Requirements**:
+  - `programmatic` TR-2.1: 后端服务启动成功，端口正常监听
+  - `programmatic` TR-2.2: 可以通过 Postman 测试基础接口返回统一格式
+- **Status**: 已完成
 
-### [x] 任务 2: 数据库设计与搭建
-- **优先级**：P0
-- **依赖**：任务 1
-- **描述**：
-  - 设计 MySQL 数据库表结构
-  - 配置 Redis 缓存
-  - 实现数据库初始化脚本
-  - 配置数据库连接
-- **成功标准**：
-  - 数据库表结构合理
-  - 应用可正常连接数据库
-- **测试要求**：
-  - `programmatic` TR-2.1: MySQL 连接测试通过
-  - `programmatic` TR-2.2: Redis 连接测试通过
-- **备注**：考虑使用 JPA 或 MyBatis 作为 ORM 框架
+## [x] 任务 3：后端用户认证模块开发
+- **Priority**: P0
+- **Depends On**: 任务 2
+- **Description**:
+  - 用户注册接口
+  - 用户登录接口
+  - JWT Token 生成和验证
+  - 获取当前用户信息接口
+- **Success Criteria**:
+  - 用户可以注册和登录
+  - JWT Token 验证正常工作
+- **Test Requirements**:
+  - `programmatic` TR-3.1: 注册接口可以创建新用户
+  - `programmatic` TR-3.2: 登录接口可以返回 JWT Token
+  - `programmatic` TR-3.3: 受保护的接口需要有效 Token 才能访问
+- **Status**: 已完成
 
-### [x] 任务 3: 后端核心功能实现
-- **优先级**：P1
-- **依赖**：任务 2
-- **描述**：
-  - 用户认证与授权
-  - 时光漂流瓶核心业务逻辑
-  - RESTful API 接口开发
-  - 异常处理与日志
-- **成功标准**：
-  - 所有核心 API 接口可用
-  - 认证授权机制正常
-- **测试要求**：
-  - `programmatic` TR-3.1: API 接口测试覆盖率 ≥ 80%
-  - `programmatic` TR-3.2: 认证授权功能测试通过
-- **备注**：考虑使用 Spring Security 实现认证授权
+## [x] 任务 4：后端漂流瓶核心功能开发
+- **Priority**: P0
+- **Depends On**: 任务 3
+- **Description**:
+  - 发送漂流瓶接口
+  - 随机捞取漂流瓶接口
+  - 获取我的漂流瓶列表接口
+  - 获取捞取到的漂流瓶列表接口
+  - 删除漂流瓶接口
+- **Success Criteria**:
+  - 漂流瓶的发送、捞取、查询功能完整
+- **Test Requirements**:
+  - `programmatic` TR-4.1: 可以成功发送漂流瓶
+  - `programmatic` TR-4.2: 可以随机捞取未被捞取的漂流瓶
+  - `programmatic` TR-4.3: 可以查询自己发送和捞取的漂流瓶列表
+- **Status**: 已完成
 
-### [x] 任务 4: 前端核心功能实现
-- **优先级**：P1
-- **依赖**：任务 3
-- **描述**：
-  - 用户界面开发
-  - API 调用与数据展示
-  - 表单验证与错误处理
-  - 响应式布局
-- **成功标准**：
-  - 前端页面功能完整
-  - 用户体验流畅
-- **测试要求**：
-  - `human-judgement` TR-4.1: 界面美观，操作流畅
-  - `programmatic` TR-4.2: 前端功能测试通过
-- **备注**：使用 Flutter 的 Material 或 Cupertino 组件库
+## [x] 任务 5：后端漂流瓶回复功能开发
+- **Priority**: P1
+- **Depends On**: 任务 4
+- **Description**:
+  - 发送回复接口
+  - 获取漂流瓶的回复列表接口
+- **Success Criteria**:
+  - 用户可以回复漂流瓶并查看回复历史
+- **Test Requirements**:
+  - `programmatic` TR-5.1: 可以成功发送回复
+  - `programmatic` TR-5.2: 可以获取漂流瓶的所有回复
+- **Status**: 已完成
 
-### [x] 任务 5: 前后端集成与测试
-- **优先级**：P1
-- **依赖**：任务 3, 任务 4
-- **描述**：
-  - 前后端接口对接
-  - 集成测试
+## [x] 任务 6：Flutter 前端基础架构搭建
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 添加必要的依赖（http, provider/shared_preferences, flutter_secure_storage 等）
+  - 配置路由管理
+  - 创建主题配置
+  - 实现 API 请求封装
+  - 实现 Token 管理
+- **Success Criteria**:
+  - 前端项目架构清晰，依赖配置完整
+- **Test Requirements**:
+  - `human-judgment` TR-6.1: 项目可以正常编译运行
+  - `human-judgment` TR-6.2: 基础页面导航正常
+- **Status**: 已完成
+
+## [x] 任务 7：Flutter 用户认证页面开发
+- **Priority**: P0
+- **Depends On**: 任务 3, 任务 6
+- **Description**:
+  - 登录页面 UI
+  - 注册页面 UI
+  - 集成登录/注册 API
+  - 实现 Token 持久化
+- **Success Criteria**:
+  - 用户可以在前端完成注册和登录
+- **Test Requirements**:
+  - `human-judgment` TR-7.1: 登录和注册页面 UI 美观
+  - `programmatic` TR-7.2: 可以成功登录并跳转到主页
+  - `programmatic` TR-7.3: 登录状态可以持久化保存
+- **Status**: 已完成
+
+## [x] 任务 8：Flutter 漂流瓶主页开发
+- **Priority**: P0
+- **Depends On**: 任务 4, 任务 7
+- **Description**:
+  - 主页底部导航栏
+  - 捞取漂流瓶页面（带有动画效果）
+  - 发送漂流瓶页面
+  - 我的漂流瓶列表页面
+- **Success Criteria**:
+  - 主页功能完整，可以进行捞取和发送漂流瓶操作
+- **Test Requirements**:
+  - `human-judgment` TR-8.1: 页面 UI 美观，交互流畅
+  - `programmatic` TR-8.2: 可以成功捞取漂流瓶
+  - `programmatic` TR-8.3: 可以成功发送漂流瓶
+  - `programmatic` TR-8.4: 可以查看我的漂流瓶列表
+- **Status**: 已完成
+
+## [x] 任务 9：Flutter 漂流瓶详情和回复功能开发
+- **Priority**: P1
+- **Depends On**: 任务 5, 任务 8
+- **Description**:
+  - 漂流瓶详情页面
+  - 回复列表展示
+  - 发送回复功能
+- **Success Criteria**:
+  - 可以查看漂流瓶详情并进行回复
+- **Test Requirements**:
+  - `human-judgment` TR-9.1: 详情页面 UI 美观
+  - `programmatic` TR-9.2: 可以查看回复列表
+  - `programmatic` TR-9.3: 可以成功发送回复
+- **Status**: 已完成
+
+## [x] 任务 10：整体功能测试与优化
+- **Priority**: P1
+- **Depends On**: 任务 9
+- **Description**:
+  - 端到端功能测试
+  - 修复发现的 Bug
+  - UI/UX 优化
   - 性能优化
-  - 安全性检查
-- **成功标准**：
-  - 前后端集成无问题
-  - 系统运行稳定
-- **测试要求**：
-  - `programmatic` TR-5.1: 集成测试通过率 100%
-  - `programmatic` TR-5.2: 系统性能测试通过
-- **备注**：使用 Postman 或类似工具进行 API 测试
+- **Success Criteria**:
+  - 所有功能正常工作，用户体验良好
+- **Test Requirements**:
+  - `human-judgment` TR-10.1: 完整流程测试通过（注册→登录→发送→捞取→回复）
+  - `human-judgment` TR-10.2: UI 响应流畅，无明显卡顿
+- **Status**: 已完成
 
-### [x] 任务 6: 部署与上线准备
-- **优先级**：P2
-- **依赖**：任务 5
-- **描述**：
-  - 构建生产版本
-  - 配置部署环境
-  - 编写部署文档
-  - 准备上线检查清单
-- **成功标准**：
-  - 应用可正常部署
-  - 部署流程清晰
-- **测试要求**：
-  - `programmatic` TR-6.1: 生产环境部署测试通过
-  - `human-judgement` TR-6.2: 部署文档完整清晰
-- **备注**：根据实际部署环境调整配置
+---
 
-## 技术栈
-- **前端**：Flutter Web, Dart
-- **后端**：Spring Boot, Java
-- **数据库**：MySQL, Redis
-- **构建工具**：Maven, Flutter CLI
-- **版本控制**：Git
+## 项目完成总结
 
-## 项目结构
+时光漂流瓶项目已全部完成！项目包含完整的前后端功能：
+
+### 后端（Spring Boot）
+- ✅ 数据库设计与初始化
+- ✅ 用户认证（注册、登录、JWT）
+- ✅ 漂流瓶核心功能（发送、捞取、查询、删除）
+- ✅ 漂流瓶回复功能
+
+### 前端（Flutter）
+- ✅ 基础架构搭建
+- ✅ 用户认证页面（登录、注册）
+- ✅ 主页底部导航
+- ✅ 捞取漂流瓶页面（带动画效果）
+- ✅ 发送漂流瓶页面
+- ✅ 我的漂流瓶列表
+- ✅ 漂流瓶详情和回复页面
+
+### 项目结构
 ```
 Timefloat/
-├── backend/           # Spring Boot 后端
-│   ├── src/
-│   ├── pom.xml
-│   └── ...
-├── frontend/          # Flutter 前端
-│   ├── lib/
-│   ├── web/
-│   └── ...
-├── docs/              # 文档
-└── .trae/             # Trae 配置
+├── time_float_backend/          # Spring Boot 后端
+│   ├── src/main/java/
+│   │   ├── entity/              # 实体类
+│   │   ├── mapper/              # MyBatis Mapper
+│   │   ├── dto/                 # 数据传输对象
+│   │   ├── service/             # 业务逻辑
+│   │   ├── controller/          # 控制器
+│   │   ├── common/              # 通用类
+│   │   ├── config/              # 配置类
+│   │   ├── exception/           # 异常处理
+│   │   └── util/                # 工具类
+│   └── src/main/resources/
+│       ├── schema.sql           # 数据库脚本
+│       ├── mapper/              # MyBatis XML映射
+│       └── application.yml      # 配置文件
+└── time_float_frontend/         # Flutter前端
+    └── lib/
+        ├── models/              # 数据模型
+        ├── services/            # API服务
+        ├── providers/           # 状态管理
+        ├── screens/             # 页面
+        └── utils/               # 工具类
 ```
-
-## 开发流程
-1. 完成任务 1: 项目初始化
-2. 完成任务 2: 数据库搭建
-3. 并行开发任务 3 (后端) 和任务 4 (前端)
-4. 完成任务 5: 集成测试
-5. 完成任务 6: 部署上线
-
-## 注意事项
-- 保持代码风格一致性
-- 定期提交代码，编写清晰的 commit message
-- 及时更新文档
-- 关注安全性和性能优化
-- 确保跨浏览器兼容性 (对于 Web 端)
-
-## 风险管理
-- **技术风险**：Flutter Web 的浏览器兼容性
-- **时间风险**：前后端集成可能遇到的问题
-- **资源风险**：数据库配置和部署环境准备
-
-## 成功标准
-- 功能完整：所有核心功能实现
-- 性能良好：响应速度快，用户体验流畅
-- 安全可靠：数据安全，系统稳定
-- 代码质量：代码结构清晰，易于维护
-- 文档完整：开发、部署文档齐全

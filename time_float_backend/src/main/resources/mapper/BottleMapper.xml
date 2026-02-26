@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.time_float_backend.mapper.BottleMapper">
+
+    <resultMap id="BottleResultMap" type="com.time_float_backend.entity.Bottle">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="isPicked" column="is_picked"/>
+        <result property="pickedUserId" column="picked_user_id"/>
+        <result property="pickedAt" column="picked_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="username" column="username"/>
+        <result property="pickedUsername" column="picked_username"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.time_float_backend.entity.Bottle" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bottles (user_id, content, image_url) VALUES (#{userId}, #{content}, #{imageUrl})
+    </insert>
+
+    <select id="findById" resultMap="BottleResultMap">
+        SELECT b.*, u1.username, u2.username as picked_username
+        FROM bottles b
+        LEFT JOIN users u1 ON b.user_id = u1.id
+        LEFT JOIN users u2 ON b.picked_user_id = u2.id
+        WHERE b.id = #{id}
+    </select>
+
+    <select id="pickRandomBottle" resultMap="BottleResultMap">
+        SELECT b.*, u.username
+        FROM bottles b
+        LEFT JOIN users u ON b.user_id = u.id
+        WHERE b.is_picked = 0 AND b.user_id != #{excludeUserId}
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
+
+    <select id="findByUserId" resultMap="BottleResultMap">
+        SELECT b.*, u1.username, u2.username as picked_username
+        FROM bottles b
+        LEFT JOIN users u1 ON b.user_id = u1.id
+        LEFT JOIN users u2 ON b.picked_user_id = u2.id
+        WHERE b.user_id = #{userId}
+        ORDER BY b.created_at DESC
+    </select>
+
+    <select id="findByPickedUserId" resultMap="BottleResultMap">
+        SELECT b.*, u1.username, u2.username as picked_username
+        FROM bottles b
+        LEFT JOIN users u1 ON b.user_id = u1.id
+        LEFT JOIN users u2 ON b.picked_user_id = u2.id
+        WHERE b.picked_user_id = #{pickedUserId}
+        ORDER BY b.picked_at DESC
+    </select>
+
+    <update id="update" parameterType="com.time_float_backend.entity.Bottle">
+        UPDATE bottles
+        SET content = #{content},
+            image_url = #{imageUrl},
+            is_picked = #{isPicked},
+            picked_user_id = #{pickedUserId},
+            picked_at = #{pickedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM bottles WHERE id = #{id}
+    </delete>
+
+</mapper>
