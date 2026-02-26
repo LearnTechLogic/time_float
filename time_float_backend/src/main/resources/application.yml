@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: time_float_backend
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://8.153.170.199:3306/time_float
+    username: time_float
+    password: 1234
